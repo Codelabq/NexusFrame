@@ -47,22 +47,32 @@ export const SAMPLE_TEMPLATE_KEYS = [
 function runTests() {
   console.log("=== Running Mapping V1 Tests ===");
 
-  // 1. Basic & Nested Path Test
+  // 1. Basic & Nested Path & Expected Types Test
   const basicResult = buildMapping(
     SAMPLE_TEMPLATE_KEYS,
     {
       title: "user.company.name",
-      image: "user.profile.avatar"
+      image: "user.profile.avatar",
+      price: "user.profile.age",
+      author: "user.profile.bio"
+    },
+    {
+      title: "string",
+      image: "string",
+      price: "number",
+      author: "null"
     },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
-  console.assert(basicResult.ok === true, "Basic mapping should succeed");
+  console.assert(basicResult.ok === true, "Basic mapping with expected types should succeed");
   if (basicResult.ok) {
-    console.assert(basicResult.value.title === "user.company.name", "Title path preserved");
-    console.assert(basicResult.value.image === "user.profile.avatar", "Image path preserved");
+    console.assert(basicResult.value.mapping.title === "user.company.name", "Title path preserved");
+    console.assert(basicResult.value.expectedTypes.title === "string", "Title expected type is string");
+    console.assert(basicResult.value.expectedTypes.price === "number", "Price expected type is number");
+    console.assert(basicResult.value.expectedTypes.author === "null", "Author expected type is null");
   }
-  console.log("✓ Basic & Nested Path test passed");
+  console.log("✓ Basic, Nested Path & Expected Types test passed");
 
   // 2. Array Index Test
   const arrayResult = buildMapping(
@@ -70,12 +80,16 @@ function runTests() {
     {
       title: "user.posts.0.title"
     },
+    {
+      title: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
   console.assert(arrayResult.ok === true, "Array index mapping should succeed");
   if (arrayResult.ok) {
-    console.assert(arrayResult.value.title === "user.posts.0.title", "Array index path preserved");
+    console.assert(arrayResult.value.mapping.title === "user.posts.0.title", "Array index path preserved");
+    console.assert(arrayResult.value.expectedTypes.title === "string", "Array expected type preserved");
   }
   console.log("✓ Array Index test passed");
 
@@ -84,6 +98,9 @@ function runTests() {
     SAMPLE_TEMPLATE_KEYS,
     {
       title: "store.items.0.name"
+    },
+    {
+      title: "string"
     },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
@@ -100,6 +117,9 @@ function runTests() {
     {
       title: "user.profile.nonexistent"
     },
+    {
+      title: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
@@ -114,6 +134,9 @@ function runTests() {
     SAMPLE_TEMPLATE_KEYS,
     {
       title: "user.profile.name.toUpperCase()"
+    },
+    {
+      title: "string"
     },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
@@ -131,12 +154,17 @@ function runTests() {
       title: "user.company.name",
       description: "" // unmapped optional field
     },
+    {
+      title: "string",
+      description: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
   console.assert(optionalResult.ok === true, "Unmapped optional fields should be allowed and ignored in mapping");
   if (optionalResult.ok) {
-    console.assert(optionalResult.value.description === undefined, "Description should not appear in mapping output");
+    console.assert(optionalResult.value.mapping.description === undefined, "Description should not appear in mapping output");
+    console.assert(optionalResult.value.expectedTypes.description === undefined, "Description expected type should not appear in expectedTypes output");
   }
   console.log("✓ Optional Unmapped Fields test passed");
 
