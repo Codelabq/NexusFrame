@@ -1,39 +1,25 @@
-// engine/validation/type-compatibility.ts
-import type {
-  ExpectedType,
-  ExpectedTypes,
-  ValidationIssue,
-} from "./types";
+import type { ExpectedDataType, ExpectedTypesObject } from "@/types/mapping";
+import type { ValidationIssue } from "@/types/validation";
 
 function matchesExpectedType(
   value: unknown,
-  expectedType: ExpectedType,
+  expectedType: ExpectedDataType,
 ): boolean {
   switch (expectedType) {
     case "string":
       return typeof value === "string";
     case "number":
       return typeof value === "number" && !Number.isNaN(value);
-    case "boolean":
-      return typeof value === "boolean";
-    case "object":
-      return (
-        typeof value === "object" &&
-        value !== null &&
-        !Array.isArray(value)
-      );
     case "array":
       return Array.isArray(value);
     case "null":
       return value === null;
-    case "unknown":
-      return true;
   }
 }
 
 export function validateTypeCompatibility(
   resolvedValues: Record<string, unknown>,
-  expectedTypes: ExpectedTypes,
+  expectedTypes: ExpectedTypesObject,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 

@@ -1,8 +1,5 @@
 // engine/validation/invalid-values.ts
-import type {
-  InvalidValueRule,
-  ValidationIssue,
-} from "./types";
+import type { InvalidValueRule, ValidationIssue } from "@/types/validation";
 
 export function validateInvalidValues(
   resolvedValues: Record<string, unknown>,
@@ -24,7 +21,6 @@ export function validateInvalidValues(
 
     if (
       value === undefined ||
-      value === null ||
       (typeof value === "number" && Number.isNaN(value))
     ) {
       issues.push({

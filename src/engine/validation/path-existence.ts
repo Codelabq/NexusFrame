@@ -1,29 +1,6 @@
-import type {
-  MappingObject,
-  ValidationIssue,
-} from "./types";
-
-function hasPath(value: unknown, path: string): boolean {
-  if (!path) {
-    return false;
-  }
-
-  let currentValue: unknown = value;
-
-  for (const segment of path.split(".")) {
-    if (
-      currentValue === null ||
-      typeof currentValue !== "object" ||
-      !Object.prototype.hasOwnProperty.call(currentValue, segment)
-    ) {
-      return false;
-    }
-
-    currentValue = (currentValue as Record<string, unknown>)[segment];
-  }
-
-  return true;
-}
+import type { MappingObject } from "@/types/mapping";
+import type { ValidationIssue } from "@/types/validation";
+import { parseDataPath, resolvePathValue } from "@/engine/mapping/validator";
 
 export function validatePathExistence(
   apiResponse: unknown,
@@ -32,7 +9,8 @@ export function validatePathExistence(
   const issues: ValidationIssue[] = [];
 
   for (const [fieldName, path] of Object.entries(mapping)) {
-    if (!hasPath(apiResponse, path)) {
+    const segments = parseDataPath(path);
+    if (segments.length === 0 || !resolvePathValue(apiResponse, segments).found) {
       issues.push({
         block: "path-existence",
         fieldName,

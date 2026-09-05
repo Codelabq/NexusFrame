@@ -1,4 +1,7 @@
-import { MappingError, PathValidationResult } from './types';
+import type {
+  MappingError,
+  PathValidationResult,
+} from "@/types/mapping";
 
 /**
  * Checks if a string contains forbidden expressions or code constructs.
@@ -21,7 +24,6 @@ export function containsForbiddenExpressions(rawPath: string): boolean {
     /&&/,             // logical AND
     /\|\|/,           // logical OR
     /\+/,             // addition/concatenation
-    /-/,              // subtraction
     /\*/,             // multiplication
     /\//,             // division
     /===/, /==/, /!==/, /!=/, />/, /</, // comparisons
@@ -42,7 +44,8 @@ export function parseDataPath(rawPath: string): string[] {
 
   // Split by dot, but be careful with property names. V1 supports standard dot notation.
   // Segments can be alphanumeric, underscores, hyphens, or numeric indices.
-  return trimmed.split('.').map((s) => s.trim()).filter(Boolean);
+  const segments = trimmed.split('.').map((segment) => segment.trim());
+  return segments.some((segment) => segment.length === 0) ? [] : segments;
 }
 
 /**

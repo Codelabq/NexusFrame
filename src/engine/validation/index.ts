@@ -2,36 +2,30 @@
 import { validateInvalidValues } from "./invalid-values";
 import { validatePathExistence } from "./path-existence";
 import { validateTypeCompatibility } from "./type-compatibility";
-import type {
-  ExpectedTypes,
-  InvalidValueRule,
-  MappingObject,
-  ValidationResult,
-} from "./types";
+import { resolveMappingPaths } from "@/engine/resolve";
+import type { ValidationInput, ValidationResult } from "@/types/validation";
 
 export * from "./invalid-values";
 export * from "./path-existence";
 export * from "./type-compatibility";
-export * from "./types";
-
-export interface ValidationInput {
-  // Connect these placeholders to the real project values manually.
-  apiResponse: unknown;
-  mapping: MappingObject;
-  resolvedValues: Record<string, unknown>;
-  expectedTypes: ExpectedTypes;
-  invalidValueRules?: Record<string, InvalidValueRule>;
-}
+export * from "@/types/validation";
+export type {
+  ExpectedDataType as ExpectedType,
+  ExpectedTypesObject as ExpectedTypes,
+  MappingObject,
+} from "@/types/mapping";
 
 export function validate(input: ValidationInput): ValidationResult {
+  const resolvedValues =
+    input.resolvedValues ?? resolveMappingPaths(input.apiResponse, input.mapping).values;
   const issues = [
     ...validatePathExistence(input.apiResponse, input.mapping),
     ...validateTypeCompatibility(
-      input.resolvedValues,
+      resolvedValues,
       input.expectedTypes,
     ),
     ...validateInvalidValues(
-      input.resolvedValues,
+      resolvedValues,
       input.invalidValueRules,
     ),
   ];

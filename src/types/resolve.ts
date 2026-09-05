@@ -1,4 +1,4 @@
-export type MappingObject = Record<string, string>;
+import type { MappingObject } from "./mapping";
 
 export type TemplateData = Record<string, unknown>;
 
@@ -16,6 +16,11 @@ export interface ResolveWarning {
 export interface PathResolutionResult {
   values: TemplateData;
   errors: ResolveError[];
+}
+
+export interface ResolveInput {
+  apiResponse: unknown;
+  mapping: MappingObject;
 }
 
 export interface ResolveResult {

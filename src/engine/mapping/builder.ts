@@ -1,4 +1,11 @@
-import { MappingContract, MappingError, MappingResult, ExpectedDataType, ExpectedTypesContract, MappingOutput } from './types';
+import type {
+  ExpectedDataType,
+  ExpectedTypesContract,
+  MappingContract,
+  MappingError,
+  MappingOutput,
+  MappingResult,
+} from "@/types/mapping";
 import { validateDataPath } from './validator';
 
 /**

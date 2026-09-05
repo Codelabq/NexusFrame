@@ -1,7 +1,5 @@
-import type {
-  MappingObject,
-  TemplateData,
-} from "./types";
+import type { MappingObject } from "@/types/mapping";
+import type { TemplateData } from "@/types/resolve";
 
 export function assembleTemplateData(
   mapping: MappingObject,

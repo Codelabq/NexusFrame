@@ -1,41 +1,10 @@
 import type {
-  MappingObject,
   PathResolutionResult,
   TemplateData,
   ResolveError,
-} from "./types";
-
-function resolvePath(
-  apiResponse: unknown,
-  path: string,
-): { found: boolean; value: unknown } {
-  if (!path.trim()) {
-    return { found: false, value: undefined };
-  }
-
-  let currentValue: unknown = apiResponse;
-
-  for (const segment of path.split(".")) {
-    if (
-      currentValue === null ||
-      (typeof currentValue !== "object" &&
-        typeof currentValue !== "function")
-    ) {
-      return { found: false, value: undefined };
-    }
-
-    if (!Object.prototype.hasOwnProperty.call(currentValue, segment)) {
-      return { found: false, value: undefined };
-    }
-
-    currentValue = (currentValue as Record<string, unknown>)[segment];
-  }
-
-  return {
-    found: true,
-    value: currentValue,
-  };
-}
+} from "@/types/resolve";
+import type { MappingObject } from "@/types/mapping";
+import { parseDataPath, resolvePathValue } from "@/engine/mapping/validator";
 
 export function resolveMappingPaths(
   apiResponse: unknown,
@@ -45,7 +14,8 @@ export function resolveMappingPaths(
   const errors: ResolveError[] = [];
 
   for (const [templateKey, path] of Object.entries(mapping)) {
-    const result = resolvePath(apiResponse, path);
+    const segments = parseDataPath(path);
+    const result = resolvePathValue(apiResponse, segments);
 
     if (!result.found) {
       errors.push({
