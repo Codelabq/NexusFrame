@@ -9,16 +9,18 @@ export default function Navbar() {
 
   const links = [
     { name: 'Docs', href: '#' },
-    { name: 'Templates', href: '#' },
+    { name: 'Templates', href: '/studio' },
     { name: 'Pricing', href: '#' },
-    { name: 'Changelog', href: '#' },
+    { name: 'Contact us', href: '#' },
   ];
 
   return (
     <nav className="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[1400px] z-50 bg-surface/80 backdrop-blur-md border border-stroke-cyan shadow-sm rounded-xl">
       <div className="flex justify-between items-center px-md py-xs max-w-container-max mx-auto">
+       <Link href="/" className="flex items-center gap-sm">
         <div className="font-headline-md text-headline-md font-bold text-electric-cyan tracking-tighter">Nexus</div>
         
+       </Link> 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-md items-center">
           {links.map((link) => (

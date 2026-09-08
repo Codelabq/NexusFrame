@@ -68,10 +68,10 @@ export default function WebGLBackground() {
 vec3 base_color = vec3(0.0, 0.0, 0.0); 
 
 // Pure White grid and pulse
-vec3 accent_color = vec3(1.0, 1.0, 1.0); 
+vec3 accent_color = vec3(0.0, 0.8, 0.9);
 
-// Removed the * 0.2 dampening on the accent color and increased the pulse multiplier to 0.8
-vec3 final_color = mix(base_color, accent_color, line * pulse * 0.8);
+// Removed the * 0.2 dampening on the accent color and increased the pulse multiplier to 0.4
+vec3 final_color = mix(base_color, accent_color, line * pulse * 0.18);
 
 gl_FragColor = vec4(final_color, 1.0);
       }

@@ -27,9 +27,9 @@ const DEMO_STEPS: ProfileData[] = [
   },
 ];
 
-import JsonEditor from "./Playground/JsonEditor";
-import MappingEngine from "./Playground/MappingEngine";
-import LivePreview from "./Playground/LivePreview";
+import JsonEditor from "../Playground/JsonEditor";
+import MappingEngine from "../Playground/MappingEngine";
+import LivePreview from "../Playground/LivePreview";
 
 export default function Playground() {
       const [stepIndex, setStepIndex] = useState(0);

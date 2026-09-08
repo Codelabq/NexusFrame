@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import WebGLBackground from "./components/WebGLBackground";
+import Navbar from '../components/landing/Navbar';
+import Footer from '../components/landing/Footer';
+import WebGLBackground from "../components/landing/WebGLBackground";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
       </head>
-      <body className="min-h-full flex flex-col bg-back">
+      <body className="min-h-full flex flex-col bg-background">
         <div className="fixed inset-0 pointer-events-none bg-grid -z-20"></div>
         <Navbar />
         <WebGLBackground />
