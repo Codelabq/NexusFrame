@@ -2,13 +2,19 @@
 import StudioSidebar from '../../components/studio/StudioSidebar';
 import TemplateCard from '../../components/studio/TemplateCard';
 import { useState } from 'react';
-import { categories, templates } from '../studioTemplatesData';
+import { templates } from '../studioTemplatesData';
+
 
 export default function StudioPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-
-  const filteredTemplates = selectedCategory
+  const [selectedCategory, setSelectedCategory] = useState<null | string>('All Templates');
+  const categories : string[] = [...new Set(templates.map((temp) => temp.category))]
+  const countCategories = (cat: string) => {
+    if(cat === 'All Templates') {return templates.length.toString()}else{
+      const count = [...templates.map(temp => temp.category).filter(category => category === cat)].length
+      return count.toString()
+    }
+  }
+  const filteredTemplates = selectedCategory !== 'All Templates'
     ? templates.filter((t) => t.category === selectedCategory)
     : templates;
 
@@ -19,6 +25,7 @@ export default function StudioPage() {
       <div className="flex flex-1 pt-xl mt-md max-w-[1440px] mx-auto w-full px-md md:px-lg flex-col md:flex-row gap-xl relative z-10">
         <StudioSidebar
           categories={categories}
+          countCategories= {countCategories}
           selectedCategory={selectedCategory}
           onSelectCategory={(name) =>
             setSelectedCategory(name === 'All Templates' ? null : name)

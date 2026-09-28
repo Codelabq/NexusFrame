@@ -1,5 +1,20 @@
 import { Shield, Terminal } from "lucide-react";
-import { authenticityHash, gasTelemetry, systemDiagnostics } from "../data";
+
+const systemDiagnostics = [
+  { label: "NODE STATUS", value: "SYNCHRONIZED" },
+  { label: "CONSENSUS", value: "POS_FINALITY" },
+  { label: "SMART CONTRACT", value: "VERIFIED_ERC721" },
+  { label: "CIRCUIT BREAKER", value: "ARMED" },
+];
+
+const gasTelemetry = [
+  { label: "BASE FEE", value: "18.42 GWEI" },
+  { label: "PRIORITY TIP", value: "2.10 GWEI" },
+  { label: "ALLOCATION POOL", value: "482 / 500 REMAIN" },
+  { label: "PURGE RATE", value: "0.04/SEC" },
+];
+
+const authenticityHash = "0x7F2A...C394";
 
 function DiagnosticColumn({ title, rows }: { title: string; rows: { label: string; value: string }[] }) {
   return (

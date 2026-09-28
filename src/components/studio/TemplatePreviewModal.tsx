@@ -1,6 +1,8 @@
 'use client';
-import { CircleCheck,X } from "lucide-react";
+import { CircleCheck, X } from "lucide-react";
+import Link from "next/link";
 interface TemplatePreviewModalProps {
+  id: string;
   isOpen: boolean;
   onClose: () => void;
   imageSrc: string;
@@ -9,6 +11,7 @@ interface TemplatePreviewModalProps {
 }
 
 export default function TemplatePreviewModal({
+  id,
   isOpen,
   onClose,
   imageSrc,
@@ -43,7 +46,7 @@ export default function TemplatePreviewModal({
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <img
               src={imageSrc}
-            
+
               alt={title}
               className="w-full h-auto object-cover"
             />
@@ -71,7 +74,7 @@ export default function TemplatePreviewModal({
 
             {/* Feature list */}
             <ul className="space-y-xs">
-              {['Responsive Layout', 'Dark Mode Ready', 'TypeScript Support', 'Tailwind CSS', 'Accessible Markup'].map(
+              {['Responsive Layout', 'Modern Designs', 'Dynamic Data', 'Fully TypeScript Supported', 'Modern Tailwind CSS', 'Accessible Markup'].map(
                 (feature) => (
                   <li
                     key={feature}
@@ -88,9 +91,12 @@ export default function TemplatePreviewModal({
           </div>
 
           {/* Bottom CTA */}
-          <button className="w-full glow-hover bg-electric-cyan text-on-primary-fixed hover:bg-primary-fixed font-label-mono text-sm px-sm py-xs rounded transition-colors duration-300 font-bold mt-lg">
-            Start Building
-          </button>
+          <Link href={`/preview/${id}`}>
+            <button className="w-full glow-hover bg-electric-cyan text-on-primary-fixed hover:bg-primary-fixed font-label-mono text-sm px-sm py-xs rounded transition-colors duration-300 font-bold mt-lg">
+              Start Building
+            </button>
+          </Link>
+
         </div>
       </div>
     </div>

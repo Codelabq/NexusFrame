@@ -6,13 +6,14 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import type { ArsenalProduct } from "../data";
+import type { kinetiqArsenalProduct } from "@/types/index";
 
 interface ProductDetailsModalProps {
-  product: ArsenalProduct | null;
+  product: kinetiqArsenalProduct | null;
   isOpen: boolean;
   onClose: () => void;
-  onAddToCart: (product: ArsenalProduct) => void;
+  onAddToCart: (product: kinetiqArsenalProduct) => void;
+  addToCartLabel?: string;
 }
 
 const productIcons: Record<string, LucideIcon> = {
@@ -27,10 +28,11 @@ export default function ProductDetailsModal({
   isOpen,
   onClose,
   onAddToCart,
+  addToCartLabel,
 }: ProductDetailsModalProps) {
   if (!isOpen || !product) return null;
 
-  const ProductIcon = productIcons[product.iconName] ?? ScanLine;
+  const ProductIcon = productIcons[product.arsenalProductIconName ?? ""] ?? ScanLine;
 
   return (
     <div
@@ -55,28 +57,32 @@ export default function ProductDetailsModal({
         </button>
 
         <ProductIcon className="mx-auto h-[120px] w-[120px] text-[#4edea3] opacity-80" />
-        <p className="mt-[1.5rem] text-center font-['Inter'] text-[0.75rem] font-[700] uppercase tracking-[0.08em] text-[#4edea3]">
-          {product.badgeText}
-        </p>
+        {product.arsenalProductBadgeText && (
+          <p className="mt-[1.5rem] text-center font-['Inter'] text-[0.75rem] font-[700] uppercase tracking-[0.08em] text-[#4edea3]">
+            {product.arsenalProductBadgeText}
+          </p>
+        )}
         <h2
           id="product-details-title"
           className="mt-[0.5rem] text-center font-['Montserrat'] text-[24px] font-[800] text-[#e3e1e9]"
         >
-          {product.title}
+          {product.arsenalProductTitle}
         </h2>
         <p className="mt-[1rem] text-center font-['Inter'] text-[16px] leading-[1.5] text-[#bbcabf]">
-          {product.description}
+          {product.arsenalProductDescription}
         </p>
         <p className="mt-[1.5rem] text-center font-['Montserrat'] text-[32px] font-[800] text-[#4edea3]">
-          ${product.price.toFixed(2)}
+          ${product.arsenalProductPrice.toFixed(2)}
         </p>
-        <button
-          type="button"
-          onClick={() => onAddToCart(product)}
-          className="mt-[1.5rem] w-full rounded-[3rem] bg-[#4edea3] py-[1rem] font-['Montserrat'] font-[800] uppercase text-[#003824] transition-transform hover:scale-[1.01]"
-        >
-          Add to Arsenal
-        </button>
+        {addToCartLabel && (
+          <button
+            type="button"
+            onClick={() => onAddToCart(product)}
+            className="mt-[1.5rem] w-full rounded-[3rem] bg-[#4edea3] py-[1rem] font-['Montserrat'] font-[800] uppercase text-[#003824] transition-transform hover:scale-[1.01]"
+          >
+            {addToCartLabel}
+          </button>
+        )}
       </div>
     </div>
   );

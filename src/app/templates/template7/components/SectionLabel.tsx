@@ -1,0 +1,1 @@
+export default function SectionLabel({ children }: { children: React.ReactNode }) { return <h3 className="mb-2 font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-[0.06em] text-[#47464a]">{children}</h3>; }

@@ -1,16 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { ArrowBigDown } from 'lucide-react';
 
-interface Category {
-  name: string;
-  count: number;
-}
 
 interface StudioSidebarProps {
-  categories: Category[];
+  categories: string[] ;
   selectedCategory: string | null;
   onSelectCategory: (name: string) => void;
+  countCategories : (cat:string) => string
 }
 
 const frameworks = ['React', 'Next.js'];
@@ -19,11 +17,12 @@ export default function StudioSidebar({
   categories,
   selectedCategory,
   onSelectCategory,
+  countCategories
 }: StudioSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const activeCategory = selectedCategory ?? 'All Templates';
-
+ console.log(categories)
   return (
     <>
       {/* Desktop sidebar — hidden on mobile */}
@@ -33,19 +32,33 @@ export default function StudioSidebar({
             Categories
           </h3>
           <ul className="space-y-unit">
+            <li>
+              <a
+                className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
+                  activeCategory === 'All Templates'
+                    ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
+                }`}
+                href="#"
+                 onClick={() => onSelectCategory('All Templates')}
+              >
+                <span>All Templates</span>
+                <span className="font-label-mono text-xs opacity-70">{countCategories('All Templates')}</span>
+              </a>
+            </li>
             {categories.map((category) => (
-              <li key={category.name}>
+              <li key={category}>
                 <a
                   className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
-                    activeCategory === category.name
+                    activeCategory === category
                       ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
                       : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
                   }`}
                   href="#"
-                  onClick={() => onSelectCategory(category.name)}
+                  onClick={() => onSelectCategory(category)}
                 >
-                  <span>{category.name}</span>
-                  <span className="font-label-mono text-xs opacity-70">{category.count}</span>
+                  <span>{category}</span>
+                  <span className="font-label-mono text-xs opacity-70">{countCategories(category)}</span>
                 </a>
               </li>
             ))}
@@ -88,7 +101,7 @@ export default function StudioSidebar({
               isOpen ? 'rotate-180' : ''
             }`}
           >
-            expand_more
+            <ArrowBigDown />
           </span>
         </button>
 
@@ -100,21 +113,21 @@ export default function StudioSidebar({
           <div className="deep-glass rounded-lg p-md glass-panel glass-panel-glow">
             <ul className="space-y-unit">
               {categories.map((category) => (
-                <li key={category.name}>
+                <li key={category}>
                   <a
                     className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
-                      activeCategory === category.name
+                      activeCategory === category
                         ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
                     }`}
                     href="#"
                     onClick={() => {
-                      onSelectCategory(category.name);
+                      onSelectCategory(category);
                       setIsOpen(false);
                     }}
                   >
-                    <span>{category.name}</span>
-                    <span className="font-label-mono text-xs opacity-70">{category.count}</span>
+                    <span>{category}</span>
+                    <span className="font-label-mono text-xs opacity-70">{countCategories(category)}</span>
                   </a>
                 </li>
               ))}

@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { Product } from "../data";
+import type { primeMartProduct } from "@/types/index";
 
 interface NavbarProps {
-	cartItems: Product[];
+	cartItems: primeMartProduct[];
 	onOpenCart: () => void;
 }
 

@@ -1,0 +1,1 @@
+export default function FormField({ label, children }: { label: string; children: React.ReactNode }) { return <label className="block"><span className="mb-1 block font-['JetBrains_Mono'] text-[10px] font-semibold uppercase tracking-[0.04em] text-[#47464a]">{label}</span>{children}</label>; }

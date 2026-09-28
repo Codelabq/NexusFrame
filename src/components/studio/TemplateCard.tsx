@@ -6,7 +6,7 @@ interface TemplateCardProps {
   id : string;
   title: string;
   description: string;
-  image: string;
+
   isPro?: boolean;
   fullTemplateImage: string
 }
@@ -15,7 +15,7 @@ export default function TemplateCard({
   id,
   title,
   description,
-  image,
+
   isPro = false,
   fullTemplateImage
 }: TemplateCardProps) {
@@ -29,8 +29,8 @@ export default function TemplateCard({
       {/* Image container */}
       <div className="h-48 relative overflow-hidden bg-surface-container-lowest">
         <div
-          className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-          style={{ backgroundImage: `url('${image}')` }}
+          className="w-full h-full bg-cover bg-top transition-transform duration-500 group-hover:scale-105"
+          style={{ backgroundImage: `url('${fullTemplateImage}')` }}
         />
         {isPro && (
           <div className="absolute top-sm right-sm bg-surface/80 backdrop-blur border border-outline-variant/30 rounded px-xs py-unit flex items-center gap-unit">
@@ -50,7 +50,7 @@ export default function TemplateCard({
         </p>
 
         {/* Stats */}
-     
+
 
         {/* Slide-up overlay */}
         <div className="absolute bottom-0 left-0 w-full p-md bg-glass-fill backdrop-blur-sm border-t border-stroke-cyan translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out flex gap-sm">
@@ -59,7 +59,7 @@ export default function TemplateCard({
             Start
           </button>
          </Link>
-          
+
           <button onClick={()=>{setIsOpen(true)}} className="flex-1 bg-transparent border border-electric-cyan/50 text-electric-cyan hover:bg-electric-cyan/10 font-label-mono text-sm px-sm py-xs rounded transition-colors duration-300">
             Preview
           </button>
@@ -67,7 +67,8 @@ export default function TemplateCard({
       </div>
     </div>
     {isOpen && (
-      <TemplatePreviewModal
+        <TemplatePreviewModal
+          id={id}
         isOpen={isOpen}
         title={title}
         description={description}

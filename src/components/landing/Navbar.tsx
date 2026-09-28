@@ -19,8 +19,8 @@ export default function Navbar() {
       <div className="flex justify-between items-center px-md py-xs max-w-container-max mx-auto">
        <Link href="/" className="flex items-center gap-sm">
         <div className="font-headline-md text-headline-md font-bold text-electric-cyan tracking-tighter">Nexus</div>
-        
-       </Link> 
+
+       </Link>
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-md items-center">
           {links.map((link) => (
@@ -33,8 +33,9 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:flex items-center space-x-sm">
-          <button className="bg-primary-container text-on-primary-container px-sm py-xs rounded font-medium font-body-md text-body-md transition-all duration-300 btn-primary-glow btn-hover-effect">Start Free</button>
-        </div>
+          <Link href="/studio">
+            <button className="w-full bg-primary-container text-on-primary-container px-sm py-xs rounded font-medium font-body-md text-body-md btn-primary-glow">Start Free</button>
+          </Link>   </div>
 
         {/* Mobile Burger Icon */}
         <button className="md:hidden text-on-surface" onClick={() => setIsOpen(!isOpen)}>
@@ -54,7 +55,9 @@ export default function Navbar() {
               </li>
             ))}
             <li>
-              <button className="w-full bg-primary-container text-on-primary-container px-sm py-xs rounded font-medium font-body-md text-body-md btn-primary-glow">Start Free</button>
+              <Link href="/studio">
+                <button className="w-full bg-primary-container text-on-primary-container px-sm py-xs rounded font-medium font-body-md text-body-md btn-primary-glow">Start Free</button>
+              </Link>
             </li>
           </ul>
         </div>

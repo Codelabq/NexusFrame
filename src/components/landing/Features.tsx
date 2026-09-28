@@ -1,4 +1,4 @@
-import {LayoutTemplate, Webhook,Palette} from 'lucide-react'
+import {LayoutTemplate, Webhook,Palette,Check} from 'lucide-react'
 
 const features = [
   {
@@ -7,7 +7,7 @@ const features = [
     icon: <LayoutTemplate/>,
     title: "20+ Interactive Templates",
     description:
-      "Pre-built components for dashboards, forms, and analytics designed for high-performance data visualization.",
+      "Pre-built components for E-commerce, Job boards, and Real Estate designed for high-performance data visualization.",
     align: "left",
   },
   {
@@ -23,11 +23,20 @@ const features = [
     number: "03",
     label: "03 / Theming",
     icon: <Palette/>,
-    title: "Dynamic Color Schemes",
+    title: "Built by Tailwind",
     description:
-      "Choose and customize themes to match any brand identity with our intelligent design token system.",
+      "Choose a modern template that has been built with Tailwind CSS for a consistent and modern look and feel.",
     align: "left",
   },
+  {
+    number: "04",
+    label: "04 / TypeSafe",
+    icon: <Check/>,
+    title: "TypeScript Support",
+    description:
+      "Full TypeScript support with type-safe component props and state management.",
+    align: "right",
+  }
 ];
 
 export default function Features() {
@@ -47,7 +56,7 @@ export default function Features() {
               }`}
             >
               {/* Icon */}
-              <div className={`w-full md:w-1/2 flex justify-center ${feature.number !== '02' ? 'md:justify-end' : 'md:justify-start' }`}>
+              <div className={`w-full md:w-1/2 flex justify-center ${feature.number === '01' || feature.number === '03' ? 'md:justify-end' : 'md:justify-start' }`}>
                 <div className="relative">
                   <div className="absolute -inset-4 bg-electric-cyan/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative w-16 h-16 rounded-xl glass-panel flex items-center justify-center border-electric-cyan/30">

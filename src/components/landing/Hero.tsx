@@ -1,5 +1,7 @@
 
-import {Rocket,Link} from 'lucide-react'
+import { Rocket, Link } from 'lucide-react'
+import NextLink from 'next/link'
+
 /**
  * Top hero section.
  *
@@ -17,7 +19,7 @@ export default function Hero() {
       id="hero"
       className="relative w-full max-w-container-max mx-auto px-md py-xl flex flex-col items-center text-center min-h-[80vh] justify-center overflow-hidden"
     >
-  
+
 
       {/* Beta pill */}
       <div className="glass-panel px-sm py-xs rounded-full inline-flex items-center gap-xs mb-md border-electric-cyan/30 animate-fade-in-up opacity-0">
@@ -53,13 +55,16 @@ export default function Hero() {
             className="bg-transparent border-none w-full text-on-surface font-code-block text-code-block focus:ring-0 focus:outline-none p-0"
           />
         </div>
-        <button
-          type="button"
-          className="bg-primary-container text-on-primary-container px-md py-xs rounded font-label-mono text-label-mono uppercase font-bold transition-all duration-300 btn-primary-glow btn-hover-effect whitespace-nowrap w-full sm:w-auto flex items-center justify-center gap-xs"
-        >
-          Generate Live UI
-          <span className="material-symbols-outlined text-sm"><Rocket/></span>
-        </button>
+        <NextLink href="/studio">
+          <button
+            type="button"
+            className="bg-primary-container text-on-primary-container px-md py-xs rounded font-label-mono text-label-mono uppercase font-bold transition-all duration-300 btn-primary-glow btn-hover-effect whitespace-nowrap w-full sm:w-auto flex items-center justify-center gap-xs"
+          >
+
+            Generate Live UI
+            <span className="material-symbols-outlined text-sm"><Rocket/></span>
+          </button>
+        </NextLink>
       </div>
     </section>
   );

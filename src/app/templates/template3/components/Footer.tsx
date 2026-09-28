@@ -1,5 +1,29 @@
 import { CheckCircle2, Leaf, PackageCheck, ShieldCheck } from "lucide-react";
-import { footerContent } from "../data";
+
+const footerContent = {
+  brand: "LUMEN GOODS",
+  description:
+    "Modern tactile everyday objects engineered for intentional living, balancing playful softness with precise minimalist forms.",
+  status: "Global batch release live",
+  sections: [
+    {
+      title: "Catalog",
+      links: ["Editions & Drops", "Living & Objects", "Wear & Soft Goods", "Print & Archive"],
+    },
+    {
+      title: "Care",
+      links: ["Track Order", "Shipping & Returns", "Sustainability", "Contact Studio"],
+    },
+  ],
+  newsletter: {
+    title: "Stay in the Circle",
+    description: "Private drop previews, design manifestos, and early catalog access directly to your inbox.",
+    placeholder: "Your email address",
+    action: "Join",
+  },
+  copyright: "© 2025 LUMEN Goods Co. All rights reserved. Crafted for beauty & clarity.",
+  paymentMethods: ["VISA", "MASTERCARD", "APPLE PAY", "KLARNA"],
+} as const;
 
 export default function Footer() {
   return (

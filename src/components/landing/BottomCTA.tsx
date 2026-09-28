@@ -1,4 +1,5 @@
-import {Rocket,Link} from 'lucide-react'
+import { Rocket, Link } from 'lucide-react'
+import NextLink from 'next/link';
 
 export default function BottomCTA() {
   return (
@@ -18,13 +19,15 @@ export default function BottomCTA() {
             className="bg-transparent border-none w-full text-on-surface font-code-block text-code-block focus:ring-0 focus:outline-none p-0"
           />
         </div>
-        <button
-          type="button"
-          className="bg-primary-container text-on-primary-container px-md py-xs rounded font-label-mono text-label-mono uppercase font-bold transition-all duration-300 btn-primary-glow btn-hover-effect whitespace-nowrap w-full sm:w-auto flex items-center justify-center gap-xs"
-        >
-          Generate Live UI
-          <span className="material-symbols-outlined text-sm"><Rocket/></span>
-        </button>
+        <NextLink href="/studio">
+          <button
+            type="button"
+            className="bg-primary-container text-on-primary-container px-md py-xs rounded font-label-mono text-label-mono uppercase font-bold transition-all duration-300 btn-primary-glow btn-hover-effect whitespace-nowrap w-full sm:w-auto flex items-center justify-center gap-xs"
+          >
+            Generate Live UI
+            <span className="material-symbols-outlined text-sm"><Rocket/></span>
+          </button>
+        </NextLink>
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 interface NavbarProps {
   cartItems: unknown[];
   onOpenCart: () => void;
+  announcementText?: string;
 }
 
 const navLinks = [
@@ -14,15 +15,17 @@ const navLinks = [
 ];
 
 
-export default function Navbar({ cartItems, onOpenCart }: NavbarProps) {
+export default function Navbar({ cartItems, onOpenCart, announcementText }: NavbarProps) {
   return (
     <header className="relative z-30 w-full mt-18">
-      <aside className="flex w-full items-center justify-center gap-[0.5rem] overflow-hidden bg-[#0d0e13] px-[1rem] py-[0.5rem]">
-        <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-[#4edea3]" />
-        <span className="truncate font-['Montserrat'] text-[12px] font-[800] uppercase tracking-[0.08em] text-[#4edea3]">
-          Flash sale: 50% off unlocked from TikTok · 14 min left · free express shipping
-        </span>
-      </aside>
+      {announcementText && (
+        <aside className="flex w-full items-center justify-center gap-[0.5rem] overflow-hidden bg-[#0d0e13] px-[1rem] py-[0.5rem]">
+          <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-[#4edea3]" />
+          <span className="truncate font-['Montserrat'] text-[12px] font-[800] uppercase tracking-[0.08em] text-[#4edea3]">
+            {announcementText}
+          </span>
+        </aside>
+      )}
 
       <div className="h-[64px] w-full bg-[#0d0e13]/85 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl">
         <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between gap-[1rem] px-[1rem] lg:px-[2rem]">
