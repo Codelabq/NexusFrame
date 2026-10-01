@@ -5,6 +5,10 @@ function matchesExpectedType(
   value: unknown,
   expectedType: ExpectedDataType,
 ): boolean {
+  if (Array.isArray(value) && expectedType !== "array") {
+    return value.every((item) => matchesExpectedType(item, expectedType));
+  }
+
   switch (expectedType) {
     case "string":
       return typeof value === "string";

@@ -1,6 +1,7 @@
 import type {
   ExpectedDataType,
   ExpectedTypesObject,
+  HybridMappingObject,
   MappingObject,
 } from "./mapping";
 
@@ -33,4 +34,17 @@ export interface ValidationInput {
 export interface ValidationResult {
   valid: boolean;
   issues: ValidationIssue[];
+}
+
+export interface HybridValidationInput {
+  apiResponse: unknown;
+  mapping: HybridMappingObject;
+  expectedTypes: ExpectedTypesObject;
+  invalidValueRules?: Record<string, InvalidValueRule>;
+}
+
+export interface DirectValidationInput {
+  data: Record<string, unknown>;
+  expectedTypes: ExpectedTypesObject;
+  invalidValueRules?: Record<string, InvalidValueRule>;
 }

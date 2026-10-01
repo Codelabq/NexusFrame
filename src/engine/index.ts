@@ -3,3 +3,4 @@ export * from './mapping/builder';
 export * from './fetching';
 export * from './resolve';
 export * from './validation';
+export * from '@/types/filling';

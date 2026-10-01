@@ -1,7 +1,4 @@
-import type {
-  MappingError,
-  PathValidationResult,
-} from "@/types/mapping";
+import type { MappingError, PathValidationResult } from "@/types/mapping";
 
 /**
  * Checks if a string contains forbidden expressions or code constructs.
@@ -10,7 +7,8 @@ import type {
 export function containsForbiddenExpressions(rawPath: string): boolean {
   if (!rawPath) return false;
   const forbiddenPatterns = [
-    /\(/, /\)/,       // parentheses
+    /\(/,
+    /\)/, // parentheses
     /\[.*?\.\.\..*?\]/, // spread syntax
     /\bmap\b/,
     /\bfilter\b/,
@@ -18,16 +16,24 @@ export function containsForbiddenExpressions(rawPath: string): boolean {
     /\bfind\b/,
     /\bforeach\b/,
     /\bfunction\b/,
-    /=>/,             // arrow functions
-    /\?/,             // ternaries
-    /:/,              // colon (ternary or object literal)
-    /&&/,             // logical AND
-    /\|\|/,           // logical OR
-    /\+/,             // addition/concatenation
-    /\*/,             // multiplication
-    /\//,             // division
-    /===/, /==/, /!==/, /!=/, />/, /</, // comparisons
-    /\btrue\b/, /\bfalse\b/, /\bnull\b/, /\bundefined\b/
+    /=>/, // arrow functions
+    /\?/, // ternaries
+    /:/, // colon (ternary or object literal)
+    /&&/, // logical AND
+    /\|\|/, // logical OR
+    /\+/, // addition/concatenation
+    /\*/, // multiplication
+    /\//, // division
+    /===/,
+    /==/,
+    /!==/,
+    /!=/,
+    />/,
+    /</, // comparisons
+    /\btrue\b/,
+    /\bfalse\b/,
+    /\bnull\b/,
+    /\bundefined\b/,
   ];
 
   return forbiddenPatterns.some((pattern) => pattern.test(rawPath));
@@ -38,47 +44,75 @@ export function containsForbiddenExpressions(rawPath: string): boolean {
  * Example: "user.data.posts.0.title" -> ["user", "data", "posts", "0", "title"]
  */
 export function parseDataPath(rawPath: string): string[] {
-  if (!rawPath || typeof rawPath !== 'string') return [];
+  if (!rawPath || typeof rawPath !== "string") return [];
   const trimmed = rawPath.trim();
   if (!trimmed) return [];
 
   // Split by dot, but be careful with property names. V1 supports standard dot notation.
   // Segments can be alphanumeric, underscores, hyphens, or numeric indices.
-  const segments = trimmed.split('.').map((segment) => segment.trim());
+  const segments = trimmed.split(".").map((segment) => segment.trim());
   return segments.some((segment) => segment.length === 0) ? [] : segments;
 }
 
 /**
  * Resolves a parsed path against an API response object.
  */
-export function resolvePathValue(data: unknown, segments: string[]): { found: boolean; value?: unknown } {
-  let current: any = data;
+export function resolvePathValue(
+  data: unknown,
+  segments: string[],
+): { found: boolean; value?: unknown } {
+  if (segments.length === 1 && segments[0] === "$") {
+    return { found: true, value: data };
+  }
 
-  for (let i = 0; i < segments.length; i++) {
-    const segment = segments[i];
+  if (segments.some((segment) => /^\d+$/.test(segment))) {
+    return { found: false };
+  }
+
+  const resolveSegments = (
+    current: unknown,
+    index: number,
+  ): { found: boolean; value?: unknown } => {
+    if (index === segments.length) {
+      return { found: true, value: current };
+    }
 
     if (current === null || current === undefined) {
       return { found: false };
     }
 
-    // Check if segment is an array index or object property
-    if (Array.isArray(current)) {
-      const index = Number(segment);
-      if (isNaN(index) || index < 0 || index >= current.length || !Number.isInteger(index)) {
+    const segment = segments[index];
+    if (segment === "item") {
+      if (!Array.isArray(current)) {
         return { found: false };
       }
-      current = current[index];
-    } else if (typeof current === 'object' && current !== null) {
-      if (!Object.prototype.hasOwnProperty.call(current, segment)) {
-        return { found: false };
+
+      const values: unknown[] = [];
+      for (const item of current) {
+        const result = resolveSegments(item, index + 1);
+        if (!result.found) {
+          return { found: false };
+        }
+        values.push(result.value);
       }
-      current = current[segment];
-    } else {
+      return { found: true, value: values };
+    }
+
+    if (Array.isArray(current) || typeof current !== "object") {
       return { found: false };
     }
-  }
 
-  return { found: true, value: current };
+    if (!Object.prototype.hasOwnProperty.call(current, segment)) {
+      return { found: false };
+    }
+
+    return resolveSegments(
+      (current as Record<string, unknown>)[segment],
+      index + 1,
+    );
+  };
+
+  return resolveSegments(data, 0);
 }
 
 /**
@@ -88,14 +122,19 @@ export function validateDataPath(
   templateKey: string,
   rawPath: string,
   rootPath: string,
-  apiResponse: unknown
+  apiResponse: unknown,
 ): PathValidationResult {
   const trimmedPath = rawPath.trim();
 
   if (!trimmedPath) {
     return {
       ok: false,
-      error: { kind: 'EmptyPath', message: `Path for template key "${templateKey}" cannot be empty`, templateKey, path: rawPath }
+      error: {
+        kind: "EmptyPath",
+        message: `Path for template key "${templateKey}" cannot be empty`,
+        templateKey,
+        path: rawPath,
+      },
     };
   }
 
@@ -103,27 +142,66 @@ export function validateDataPath(
   if (containsForbiddenExpressions(trimmedPath)) {
     return {
       ok: false,
-      error: { kind: 'UnsupportedExpression', message: `Path "${trimmedPath}" contains forbidden expressions or executable code. Mapping must be strictly declarative.`, templateKey, path: rawPath }
+      error: {
+        kind: "UnsupportedExpression",
+        message: `Path "${trimmedPath}" contains forbidden expressions or executable code. Mapping must be strictly declarative.`,
+        templateKey,
+        path: rawPath,
+      },
     };
   }
 
   // Check root path constraint
   const trimmedRoot = rootPath.trim();
-  if (trimmedRoot) {
-    const expectedPrefix = trimmedRoot + '.';
-    if (trimmedPath !== trimmedRoot && !trimmedPath.startsWith(expectedPrefix)) {
-      return {
-        ok: false,
-        error: { kind: 'InvalidRoot', message: `Path "${trimmedPath}" must start with root path "${trimmedRoot}"`, templateKey, path: rawPath }
-      };
-    }
+  if (!trimmedRoot) {
+    return {
+      ok: false,
+      error: {
+        kind: "MissingRootPath",
+        message: `A root path is required before mapping template key "${templateKey}"`,
+        templateKey,
+        path: rawPath,
+      },
+    };
+  }
+
+  const expectedPrefix = trimmedRoot + ".";
+  if (trimmedPath !== trimmedRoot && !trimmedPath.startsWith(expectedPrefix)) {
+    return {
+      ok: false,
+      error: {
+        kind: "InvalidRoot",
+        message: `Path "${trimmedPath}" must start with root path "${trimmedRoot}"`,
+        templateKey,
+        path: rawPath,
+      },
+    };
   }
 
   const segments = parseDataPath(trimmedPath);
   if (segments.length === 0) {
     return {
       ok: false,
-      error: { kind: 'MalformedPath', message: `Path "${trimmedPath}" is malformed`, templateKey, path: rawPath }
+      error: {
+        kind: "MalformedPath",
+        message: `Path "${trimmedPath}" is malformed`,
+        templateKey,
+        path: rawPath,
+      },
+    };
+  }
+
+  if (
+    segments.some((segment) => /^\d+$/.test(segment) || /[\[\]]/.test(segment))
+  ) {
+    return {
+      ok: false,
+      error: {
+        kind: "MalformedPath",
+        message: `Path "${trimmedPath}" uses an explicit index. Use "item" for repeated arrays instead.`,
+        templateKey,
+        path: rawPath,
+      },
     };
   }
 
@@ -132,7 +210,12 @@ export function validateDataPath(
   if (!resolution.found) {
     return {
       ok: false,
-      error: { kind: 'PathNotFound', message: `Path "${trimmedPath}" does not exist in the API response`, templateKey, path: rawPath }
+      error: {
+        kind: "PathNotFound",
+        message: `Path "${trimmedPath}" does not exist in the API response`,
+        templateKey,
+        path: rawPath,
+      },
     };
   }
 
@@ -142,6 +225,6 @@ export function validateDataPath(
 
   return {
     ok: true,
-    resolvedValue: resolution.value
+    resolvedValue: resolution.value,
   };
 }

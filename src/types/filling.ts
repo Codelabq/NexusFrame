@@ -1,0 +1,1 @@
+export type DataFillingMode = "Hybrid" | "API" | "Direct";
