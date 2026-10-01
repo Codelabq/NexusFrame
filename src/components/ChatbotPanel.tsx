@@ -1,6 +1,7 @@
 "use client";
-
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
 import {
   Bot,
   Minus,
@@ -9,9 +10,87 @@ import {
   ArrowUp,
 } from "lucide-react";
 
+// Marker for silent, navigation-triggered messages. The user never sees the
+// bubble containing this text — only the AI's resulting welcome reply.
+const SYSTEM_EVENT_PREFIX = "[SYSTEM EVENT]";
+
 export default function ChatbotPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [hasUnread, setHasUnread] = useState(false);
+  const pathname = usePathname();
+
+  let step: "landing" | "studio" | "preview" | "unknown" = "unknown";
+  if (pathname === "/") step = "landing";
+  else if (pathname === "/studio") step = "studio";
+  else if (pathname === "/preview") step = "preview";
+
+  const { messages, sendMessage, status } = useChat();
+  const isLoading = status === "submitted" || status === "streaming";
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const lastStepRef = useRef<string | null>(null);
+  const lastSeenIdRef = useRef<string | null>(null);
+
+  // --- Auto-scroll ---
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, isLoading,isOpen]);
+
+  // --- Proactive per-page welcome message ---
+  // Fires once on first mount (the page the user lands on first) and again
+  // every time `step` actually changes (real navigation, not re-renders).
+  useEffect(() => {
+    if (step === "unknown") return;
+    if (lastStepRef.current === step) return;
+    lastStepRef.current = step;
+
+    sendMessage(
+      {
+        text: `${SYSTEM_EVENT_PREFIX} The user just arrived on the "${step}" page. Greet them in one short, friendly sentence and briefly mention what they can do here.`,
+      },
+      { body: { step } },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  // --- Unread indicator when a message arrives while the panel is closed ---
+  const visibleMessages = messages.filter((m) => {
+    const text = m.parts.find((p) => p.type === "text")?.text ?? "";
+    return !text.startsWith(SYSTEM_EVENT_PREFIX);
+  });
+
+  useEffect(() => {
+      const last = visibleMessages[visibleMessages.length - 1];
+
+      if (isOpen) {
+       // Mark whatever is currently visible as "seen" the moment the panel opens.
+       lastSeenIdRef.current = last?.id ?? null;
+      setHasUnread(false);
+      return;
+    }
+      if (
+           last &&
+           last.role === "assistant" &&
+           !isLoading &&
+           last.id !== lastSeenIdRef.current
+         ) {
+      setHasUnread(true);
+    }
+  }),[visibleMessages.length, isLoading, isOpen]
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!value.trim() || isLoading) return;
+    sendMessage({ text: value }, { body: { step } });
+    setValue("");
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  }
 
   return (
     <>
@@ -28,6 +107,9 @@ export default function ChatbotPanel() {
         <span className="hidden sm:inline">
           {isOpen ? "Close" : "Nexus Assistant"}
         </span>
+        {!isOpen && hasUnread && (
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 rounded-full ring-2 ring-[#191c22] animate-pulse" />
+        )}
       </button>
 
       {/* Chat panel */}
@@ -69,57 +151,78 @@ export default function ChatbotPanel() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 [&::-webkit-scrollbar]:hidden">
-            {/* User message */}
-            <div className="flex justify-end pl-8">
-              <div className="bg-[#32353b] px-3 py-2.5 rounded-[0.5rem] rounded-tr-none text-[#e1e2eb] shadow-md border border-[#3e484f]/30">
-                <p className="font-['JetBrains_Mono'] text-[12px] leading-relaxed">
-                  I&apos;m having trouble pulling the variant price inside my
-                  nested line items loop. What is the correct dot path?
-                </p>
-                <span className="font-['JetBrains_Mono'] text-[10px] text-[#87929a] mt-1 block text-right">
-                  10:42 AM
-                </span>
-              </div>
-            </div>
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 [&::-webkit-scrollbar]:hidden"
+          >
+            {visibleMessages.map((message) => {
+              const text = message.parts
+                .filter((p) => p.type === "text")
+                .map((p) => (p as { text: string }).text)
+                .join("");
+              const isUser = message.role === "user";
 
-            {/* Assistant message */}
-            <div className="flex flex-col gap-2 pr-2">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-[#38bdf8] flex items-center justify-center shadow-sm">
-                  <Bot size={13} className="text-[#004965]" />
+              if (isUser) {
+                return (
+                  <div key={message.id} className="flex justify-end pl-8">
+                    <div className="bg-[#32353b] px-3 py-2.5 rounded-[0.5rem] rounded-tr-none text-[#e1e2eb] shadow-md border border-[#3e484f]/30">
+                      <p className="font-['JetBrains_Mono'] text-[12px] leading-relaxed whitespace-pre-wrap">
+                        {text}
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={message.id} className="flex flex-col gap-2 pr-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-[#38bdf8] flex items-center justify-center shadow-sm">
+                      <Bot size={13} className="text-[#004965]" />
+                    </div>
+                    <span className="font-['Geist'] text-[12px] font-semibold text-[#8ed5ff]">
+                      Nexus Copilot
+                    </span>
+                  </div>
+                  <div className="bg-[#1d2026] p-3 rounded-[0.5rem] rounded-tl-none flex flex-col gap-2.5 shadow-md border border-[#3e484f]/30">
+                    <p className="font-['JetBrains_Mono'] text-[12px] text-[#e1e2eb] leading-relaxed whitespace-pre-wrap">
+                      {text}
+                    </p>
+                  </div>
                 </div>
-                <span className="font-['Geist'] text-[12px] font-semibold text-[#8ed5ff]">
-                  Nexus Copilot
-                </span>
-                <span className="font-['JetBrains_Mono'] text-[10px] text-[#87929a]">
-                  Model v3
-                </span>
+              );
+            })}
+
+            {isLoading && (
+              <div className="flex flex-col gap-2 pr-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#38bdf8] flex items-center justify-center shadow-sm">
+                    <Bot size={13} className="text-[#004965]" />
+                  </div>
+                  <span className="font-['Geist'] text-[12px] font-semibold text-[#8ed5ff]">
+                    Nexus Copilot
+                  </span>
+                </div>
+                <div className="bg-[#1d2026] px-3 py-2.5 rounded-[0.5rem] rounded-tl-none flex items-center gap-1 w-fit shadow-md border border-[#3e484f]/30">
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#8ed5ff] [animation-delay:-0.3s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#8ed5ff] [animation-delay:-0.15s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#8ed5ff]" />
+                </div>
               </div>
-
-              <div className="bg-[#1d2026] p-3 rounded-[0.5rem] rounded-tl-none flex flex-col gap-2.5 shadow-md border border-[#3e484f]/30">
-                <p className="font-['JetBrains_Mono'] text-[12px] text-[#e1e2eb] leading-relaxed">
-                  In NexusFrame, nested arrays inherit the root scope unless
-                  prefixed with relative notation. To pull the item price
-                  directly inside an iterative template block:
-                </p>
-
-
-
-
-
-
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Composer */}
-          <div className="p-2 bg-[#1d2026] shrink-0 flex flex-col gap-2 border-t border-[#3e484f]/30">
+          <form
+            onSubmit={handleSubmit}
+            className="p-2 bg-[#1d2026] shrink-0 flex flex-col gap-2 border-t border-[#3e484f]/30"
+          >
             <div className="relative bg-[#0b0e14] rounded-[0.25rem] p-2 flex flex-col gap-2 shadow-inner border border-[#3e484f]/30">
               <textarea
                 rows={2}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Ask about paths, schemas, or templates... (⌘K)"
                 className="w-full bg-transparent text-[#e1e2eb] placeholder:text-[#87929a] font-['JetBrains_Mono'] text-[12px] focus:outline-none resize-none leading-relaxed [&::-webkit-scrollbar]:hidden"
               />
@@ -129,16 +232,17 @@ export default function ChatbotPanel() {
                     {value.length} / 4,000
                   </span>
                   <button
-                    type="button"
+                    type="submit"
+                    disabled={isLoading || !value.trim()}
                     aria-label="Send message"
-                    className="w-7 h-7 rounded-[0.25rem] bg-gradient-to-r from-[#38bdf8] to-[#54ddfc] text-[#004965] flex items-center justify-center shadow-[0_0_12px_rgba(56,189,248,0.4)] hover:brightness-110 active:scale-95 transition-all"
+                    className="w-7 h-7 rounded-[0.25rem] bg-gradient-to-r from-[#38bdf8] to-[#54ddfc] text-[#004965] flex items-center justify-center shadow-[0_0_12px_rgba(56,189,248,0.4)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-40"
                   >
                     <ArrowUp size={16} />
                   </button>
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </>

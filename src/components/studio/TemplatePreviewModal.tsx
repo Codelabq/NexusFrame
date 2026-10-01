@@ -91,7 +91,7 @@ export default function TemplatePreviewModal({
           </div>
 
           {/* Bottom CTA */}
-          <Link href={`/preview/${id}`}>
+          <Link href={`/preview?templateId=${id}`}>
             <button className="w-full glow-hover bg-electric-cyan text-on-primary-fixed hover:bg-primary-fixed font-label-mono text-sm px-sm py-xs rounded transition-colors duration-300 font-bold mt-lg">
               Start Building
             </button>

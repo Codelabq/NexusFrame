@@ -1,0 +1,1 @@
+export type PipelineStage = "idle" | "fetching" | "mapping" | "validating" | "resolving" | "ready" | "error";

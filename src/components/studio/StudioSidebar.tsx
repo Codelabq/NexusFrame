@@ -1,25 +1,24 @@
-'use client';
 
-import { useState } from 'react';
 import { ArrowBigDown } from 'lucide-react';
+import Link from 'next/link';
 
 
 interface StudioSidebarProps {
   categories: string[] ;
   selectedCategory: string | null;
-  onSelectCategory: (name: string) => void;
   countCategories : (cat:string) => string
+  searchParams: Promise<{ category?: string , isOpen?: string }>
 }
 
 const frameworks = ['React', 'Next.js'];
 
-export default function StudioSidebar({
+export default async function StudioSidebar({
   categories,
   selectedCategory,
-  onSelectCategory,
-  countCategories
+  countCategories,
+  searchParams,
 }: StudioSidebarProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const {isOpen} = await searchParams
 
   const activeCategory = selectedCategory ?? 'All Templates';
  console.log(categories)
@@ -33,33 +32,31 @@ export default function StudioSidebar({
           </h3>
           <ul className="space-y-unit">
             <li>
-              <a
+              <Link
                 className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
                   activeCategory === 'All Templates'
                     ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
                 }`}
-                href="#"
-                 onClick={() => onSelectCategory('All Templates')}
+                href="/studio?category=All Templates"
               >
                 <span>All Templates</span>
                 <span className="font-label-mono text-xs opacity-70">{countCategories('All Templates')}</span>
-              </a>
+              </Link>
             </li>
             {categories.map((category) => (
               <li key={category}>
-                <a
+                <Link
                   className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
                     activeCategory === category
                       ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
                       : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
                   }`}
-                  href="#"
-                  onClick={() => onSelectCategory(category)}
+                  href={`/studio?category=${category}`}
                 >
                   <span>{category}</span>
                   <span className="font-label-mono text-xs opacity-70">{countCategories(category)}</span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -82,8 +79,8 @@ export default function StudioSidebar({
 
       {/* Mobile dropdown — visible on small screens */}
       <div className="block md:hidden w-full">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
+        <Link
+          href={`/studio?isOpen=${isOpen=== 'true' ? 'false' : 'true'}&category=${activeCategory}`}
           className="deep-glass rounded-lg p-md w-full flex items-center justify-between glass-panel glass-panel-glow cursor-pointer"
         >
           <div className="flex items-center gap-xs">
@@ -98,37 +95,32 @@ export default function StudioSidebar({
           </div>
           <span
             className={`material-symbols-outlined text-on-surface-variant transition-transform duration-300 ${
-              isOpen ? 'rotate-180' : ''
+              isOpen === "true" ? 'rotate-180' : ''
             }`}
           >
             <ArrowBigDown />
           </span>
-        </button>
-
+        </Link>
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isOpen ? 'max-h-96 opacity-100 mt-xs' : 'max-h-0 opacity-0'
+            isOpen === "true" ? 'max-h-96 opacity-100 mt-xs' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="deep-glass rounded-lg p-md glass-panel glass-panel-glow">
             <ul className="space-y-unit">
               {categories.map((category) => (
                 <li key={category}>
-                  <a
+                  <Link
                     className={`flex items-center justify-between px-sm py-xs rounded font-body-md text-body-md border-l-2 transition-colors ${
                       activeCategory === category
                         ? 'text-primary-fixed-dim bg-primary-fixed-dim/10 border-electric-cyan'
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high hover:border-outline-variant border-transparent'
                     }`}
-                    href="#"
-                    onClick={() => {
-                      onSelectCategory(category);
-                      setIsOpen(false);
-                    }}
+                    href={`/studio?category=${category}&isOpen=false`}
                   >
                     <span>{category}</span>
                     <span className="font-label-mono text-xs opacity-70">{countCategories(category)}</span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

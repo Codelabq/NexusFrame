@@ -54,13 +54,17 @@ function runTests() {
       title: "user.company.name",
       image: "user.profile.avatar"
     },
+    {
+      title: "string",
+      image: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
   console.assert(basicResult.ok === true, "Basic mapping should succeed");
   if (basicResult.ok) {
-    console.assert(basicResult.value.title === "user.company.name", "Title path preserved");
-    console.assert(basicResult.value.image === "user.profile.avatar", "Image path preserved");
+    console.assert(basicResult.value.mapping.title === "user.company.name", "Title path preserved");
+    console.assert(basicResult.value.mapping.image === "user.profile.avatar", "Image path preserved");
   }
   console.log("✓ Basic & Nested Path test passed");
 
@@ -70,12 +74,15 @@ function runTests() {
     {
       title: "user.posts.0.title"
     },
+    {
+      title: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
   console.assert(arrayResult.ok === true, "Array index mapping should succeed");
   if (arrayResult.ok) {
-    console.assert(arrayResult.value.title === "user.posts.0.title", "Array index path preserved");
+    console.assert(arrayResult.value.mapping.title === "user.posts.0.title", "Array index path preserved");
   }
   console.log("✓ Array Index test passed");
 
@@ -84,6 +91,9 @@ function runTests() {
     SAMPLE_TEMPLATE_KEYS,
     {
       title: "store.items.0.name"
+    },
+    {
+      title: "string"
     },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
@@ -100,6 +110,9 @@ function runTests() {
     {
       title: "user.profile.nonexistent"
     },
+    {
+      title: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
@@ -114,6 +127,9 @@ function runTests() {
     SAMPLE_TEMPLATE_KEYS,
     {
       title: "user.profile.name.toUpperCase()"
+    },
+    {
+      title: "string"
     },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
@@ -131,12 +147,16 @@ function runTests() {
       title: "user.company.name",
       description: "" // unmapped optional field
     },
+    {
+      title: "string",
+      description: "string"
+    },
     SAMPLE_ROOT_PATH,
     SAMPLE_API_RESPONSE
   );
   console.assert(optionalResult.ok === true, "Unmapped optional fields should be allowed and ignored in mapping");
   if (optionalResult.ok) {
-    console.assert(optionalResult.value.description === undefined, "Description should not appear in mapping output");
+    console.assert(optionalResult.value.mapping.description === undefined, "Description should not appear in mapping output");
   }
   console.log("✓ Optional Unmapped Fields test passed");
 

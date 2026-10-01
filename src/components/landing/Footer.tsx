@@ -11,7 +11,7 @@ export default function Footer() {
         <Link className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy</Link>
         <Link className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms</Link>
       </div>
-      <div className="font-body-md text-body-md text-on-surface-variant text-sm"> {new Date().getFullYear()} Nexus Engineering : AHMAD MAZEN JOHA &  [ fill your name budd ;) ]. All rights reserved.</div>
+      <div className="font-body-md text-body-md text-on-surface-variant text-sm"> {new Date().getFullYear()} Nexus Engineering : 👋 AHMAD MAZEN JOHA &  AHMAD SHEIKH KHAMIS 😎 . All rights reserved.</div>
     </footer>
   );
 }

@@ -54,7 +54,7 @@ export default function TemplateCard({
 
         {/* Slide-up overlay */}
         <div className="absolute bottom-0 left-0 w-full p-md bg-glass-fill backdrop-blur-sm border-t border-stroke-cyan translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out flex gap-sm">
-         <Link href={`/preview/${id}`} className="flex-1">
+         <Link href={`/preview?templateId=${id}`} className="flex-1">
          <button className="flex-1 bg-electric-cyan text-on-primary-fixed hover:bg-primary-fixed font-label-mono text-sm px-sm py-xs rounded transition-colors duration-300 font-bold">
             Start
           </button>

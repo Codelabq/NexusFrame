@@ -1,12 +1,13 @@
-'use client'
+
 import StudioSidebar from '../../components/studio/StudioSidebar';
 import TemplateCard from '../../components/studio/TemplateCard';
-import { useState } from 'react';
 import { templates } from '../studioTemplatesData';
 
 
-export default function StudioPage() {
-  const [selectedCategory, setSelectedCategory] = useState<null | string>('All Templates');
+
+export default async function StudioPage({searchParams} : { searchParams: Promise<{ category?: string , isOpen?: string }> }) {
+  const { category } = await searchParams;
+  const selectedCategory = category ?? 'All Templates';
   const categories : string[] = [...new Set(templates.map((temp) => temp.category))]
   const countCategories = (cat: string) => {
     if(cat === 'All Templates') {return templates.length.toString()}else{
@@ -27,9 +28,7 @@ export default function StudioPage() {
           categories={categories}
           countCategories= {countCategories}
           selectedCategory={selectedCategory}
-          onSelectCategory={(name) =>
-            setSelectedCategory(name === 'All Templates' ? null : name)
-          }
+          searchParams={searchParams}
         />
 
         <main className="flex-1 pb-xl">
