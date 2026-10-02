@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import  logo  from '../../../public/icon/logo.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function Navbar() {
     <nav className="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[1400px] z-50 bg-surface/80 backdrop-blur-md border border-stroke-cyan shadow-sm rounded-xl">
       <div className="flex justify-between items-center px-md py-xs max-w-container-max mx-auto">
        <Link href="/" className="flex items-center gap-sm">
+        <img src={logo.src} alt="Nexus" className="w-11 h-11" />
         <div className="font-headline-md text-headline-md font-bold text-electric-cyan tracking-tighter">Nexus</div>
 
        </Link>

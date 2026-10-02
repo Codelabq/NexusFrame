@@ -1,9 +1,13 @@
 import Link from 'next/link';
+import  logo  from '../../../public/icon/logo.png';
 
 export default function Footer() {
   return (
     <footer className="bg-surface-container-lowest w-full py-lg px-md flex flex-col md:flex-row justify-around items-center gap-md  mx-auto border-t border-stroke-cyan relative bottom-0">
-      <div className="font-headline-sm text-headline-sm font-bold text-electric-cyan">Nexus</div>
+      <div className="font-headline-sm text-headline-sm font-bold text-electric-cyan flex items-center">
+        <img src={logo.src} alt="Nexus Logo" className="w-10 h-10 p-1" />
+        Nexus
+      </div>
       <div className="flex flex-wrap justify-center gap-sm md:gap-md">
         <Link className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary transition-colors" href="#">Documentation</Link>
         <Link className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary transition-colors" href="#">GitHub</Link>
