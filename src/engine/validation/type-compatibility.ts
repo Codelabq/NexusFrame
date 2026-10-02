@@ -5,13 +5,10 @@ function matchesExpectedType(
   value: unknown,
   expectedType: ExpectedDataType,
 ): boolean {
-<<<<<<< HEAD
   if (Array.isArray(value) && expectedType !== "array") {
     return value.every((item) => matchesExpectedType(item, expectedType));
   }
 
-=======
->>>>>>> origin/main
   switch (expectedType) {
     case "string":
       return typeof value === "string";
@@ -43,8 +40,4 @@ export function validateTypeCompatibility(
   }
 
   return issues;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/main

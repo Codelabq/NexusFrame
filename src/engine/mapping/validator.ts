@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import type { MappingError, PathValidationResult } from "@/types/mapping";
-=======
-import type {
-  MappingError,
-  PathValidationResult,
-} from "@/types/mapping";
->>>>>>> origin/main
+import type { PathValidationResult } from "@/types/mapping";
 
 /**
  * Checks if a string contains forbidden expressions or code constructs.
@@ -23,7 +16,6 @@ export function containsForbiddenExpressions(rawPath: string): boolean {
     /\bfind\b/,
     /\bforeach\b/,
     /\bfunction\b/,
-<<<<<<< HEAD
     /=>/, // arrow functions
     /\?/, // ternaries
     /:/, // colon (ternary or object literal)
@@ -42,18 +34,6 @@ export function containsForbiddenExpressions(rawPath: string): boolean {
     /\bfalse\b/,
     /\bnull\b/,
     /\bundefined\b/,
-=======
-    /=>/,             // arrow functions
-    /\?/,             // ternaries
-    /:/,              // colon (ternary or object literal)
-    /&&/,             // logical AND
-    /\|\|/,           // logical OR
-    /\+/,             // addition/concatenation
-    /\*/,             // multiplication
-    /\//,             // division
-    /===/, /==/, /!==/, /!=/, />/, /</, // comparisons
-    /\btrue\b/, /\bfalse\b/, /\bnull\b/, /\bundefined\b/
->>>>>>> origin/main
   ];
 
   return forbiddenPatterns.some((pattern) => pattern.test(rawPath));
@@ -70,11 +50,7 @@ export function parseDataPath(rawPath: string): string[] {
 
   // Split by dot, but be careful with property names. V1 supports standard dot notation.
   // Segments can be alphanumeric, underscores, hyphens, or numeric indices.
-<<<<<<< HEAD
   const segments = trimmed.split(".").map((segment) => segment.trim());
-=======
-  const segments = trimmed.split('.').map((segment) => segment.trim());
->>>>>>> origin/main
   return segments.some((segment) => segment.length === 0) ? [] : segments;
 }
 
