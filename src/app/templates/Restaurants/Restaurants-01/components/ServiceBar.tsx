@@ -1,0 +1,12 @@
+interface ServiceBarProps {
+  orderCount: number;
+  serviceOpenLabel: string;
+  servicePickupNote: string;
+  serviceItemsSelectedSuffix: string;
+  serviceReserveLabel: string;
+  servicePickupCtaLabel: string;
+  onPickup: () => void;
+  onReserve: () => void;
+}
+
+export default function ServiceBar({ orderCount, serviceOpenLabel, servicePickupNote, serviceItemsSelectedSuffix, serviceReserveLabel, servicePickupCtaLabel, onPickup, onReserve }: ServiceBarProps) { return <aside className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#d9c2b5] bg-[#ffffff] shadow-[0_-4px_16px_rgba(80,40,0,.08)]"><div className="mx-auto flex min-h-16 max-w-[1360px] items-center justify-between gap-4 px-5 py-3 lg:px-16"><p className="font-['Hanken_Grotesk'] text-[11px] text-[#544339]"><span className="mr-2 inline-block h-2.5 w-2.5 animate-ping bg-[#a85d22]" /><strong className="text-[#1d1b18]">{serviceOpenLabel}</strong> {servicePickupNote} {orderCount > 0 && <span className="ml-2 font-semibold text-[#8a4509]">· {orderCount} item{orderCount === 1 ? "" : "s"} {serviceItemsSelectedSuffix}</span>}</p><div className="flex items-center gap-3"><button type="button" onClick={onReserve} className="hidden font-['Hanken_Grotesk'] text-[10px] font-semibold uppercase tracking-[0.12em] text-[#1d1b18] underline decoration-[#d9c2b5] underline-offset-4 hover:text-[#8a4509] sm:inline">{serviceReserveLabel}</button><button type="button" onClick={onPickup} className="bg-[#32302c] px-4 py-2.5 font-['Hanken_Grotesk'] text-[10px] font-semibold uppercase tracking-[0.13em] text-[#f5f0ea] hover:bg-[#8a4509]">{servicePickupCtaLabel}</button></div></div></aside>; }

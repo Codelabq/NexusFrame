@@ -1,0 +1,13 @@
+import type { Restaurants02Product } from "../types";
+
+interface ProductCardProps {
+  product: Restaurants02Product;
+  priceLabel: string;
+  soldOutOverlay: string;
+  addLabel: string;
+  onAdd: (product: Restaurants02Product) => void;
+}
+
+const badgeClass: Record<string, string> = { yellow: "bg-[#ffe600] text-black", orange: "bg-[#ff5500] text-white", green: "bg-[#76ff9e] text-black", red: "bg-[#ba1a1a] text-white" };
+
+export default function ProductCard({ product, priceLabel, soldOutOverlay, addLabel, onAdd }: ProductCardProps) { const soldOut = product.productStock === "out"; return <article className={`flex flex-col justify-between border-[3px] ${soldOut ? "border-[#7c775f] bg-[#e8e8e8] opacity-75" : "border-black bg-white shadow-[4px_4px_0_#1b1b1b]"} transition-transform hover:-translate-y-1`}><div className="relative"><img src={product.productImageUrl} alt={product.productImageAlt} className={`h-48 w-full object-cover sm:h-52 ${soldOut ? "grayscale" : ""}`} />{product.productBadge && (<div className="absolute left-2 top-2"><span className={`border border-black px-2 py-1 font-['Space_Grotesk'] text-[10px] font-bold uppercase ${badgeClass[product.productBadgeTone ?? "yellow"]}`}>{product.productBadge}</span></div>)}<span className="absolute bottom-2 right-2 border border-black bg-white px-2 py-1 font-mono text-[10px] font-bold">{product.productCode}</span>{soldOut && <span className="absolute inset-0 flex items-center justify-center bg-black/40 font-['Space_Grotesk'] text-xl font-bold uppercase text-white">{soldOutOverlay}</span>}</div><div className="flex flex-1 flex-col justify-between border-t-[3px] border-black p-3"><div><h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase leading-tight">{product.productName}</h3><p className="mt-2 line-clamp-2 font-['Work_Sans'] text-[13px] leading-5 text-[#4b4731]">{product.productDescription}</p></div><div className="mt-4 flex items-end justify-between border-t-2 border-black pt-2"><div><span className="block font-['Space_Grotesk'] text-[9px] font-bold uppercase tracking-[0.08em] text-[#7c775f]">{priceLabel}</span><span className="font-['Space_Grotesk'] text-2xl font-bold">${product.productPrice.toFixed(2)}</span></div><button type="button" disabled={soldOut} onClick={() => onAdd(product)} aria-label={`Add ${product.productName}`} className="flex h-10 w-10 items-center justify-center border-2 border-black bg-black text-2xl font-bold text-white hover:bg-[#ffe600] hover:text-black disabled:cursor-not-allowed disabled:bg-[#e2e2e2] disabled:text-[#7c775f]">{soldOut ? "—" : addLabel}</button></div></div></article>; }

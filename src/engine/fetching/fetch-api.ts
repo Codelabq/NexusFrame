@@ -1,14 +1,25 @@
+<<<<<<< HEAD
+import type { FetchInput, FetchResult, FetchSuccess } from "@/types/fetching";
+=======
 import type {
   FetchInput,
   FetchResult,
   FetchSuccess,
 } from "@/types/fetching";
+>>>>>>> origin/main
 import { safeParseJson } from "./json-parsing";
 import { handleResponse } from "./response-handling";
 import { validateUrlValue } from "./url-validation";
 
 function makeId(): string {
+<<<<<<< HEAD
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+=======
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+>>>>>>> origin/main
     return crypto.randomUUID();
   }
 
@@ -72,11 +83,22 @@ export async function fetchApi(
       return dataResult;
     }
 
+<<<<<<< HEAD
+    const data = Array.isArray(dataResult.value)
+      ? { response: dataResult.value }
+      : dataResult.value;
+
+=======
+>>>>>>> origin/main
     const success: FetchSuccess = {
       id: input.requestId ?? makeId(),
       apiUrl: urlResult.value,
       metadata: responseResult.value,
+<<<<<<< HEAD
+      data,
+=======
       data: dataResult.value,
+>>>>>>> origin/main
       fetchedAt: new Date().toISOString(),
     };
 
