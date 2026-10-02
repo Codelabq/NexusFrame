@@ -4,7 +4,10 @@ import type {
   ResolveError,
 } from "@/types/resolve";
 import type { MappingObject } from "@/types/mapping";
+<<<<<<< HEAD
 import type { HybridMappingObject } from "@/types/mapping";
+=======
+>>>>>>> origin/main
 import { parseDataPath, resolvePathValue } from "@/engine/mapping/validator";
 
 export function resolveMappingPaths(
@@ -34,6 +37,7 @@ export function resolveMappingPaths(
     values,
     errors,
   };
+<<<<<<< HEAD
 }
 
 export function resolveHybridMapping(
@@ -62,4 +66,6 @@ export function resolveHybridMapping(
   }
 
   return { values, errors };
+=======
+>>>>>>> origin/main
 }

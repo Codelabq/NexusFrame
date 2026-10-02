@@ -1,19 +1,30 @@
 import type {
   ExpectedDataType,
   ExpectedTypesContract,
+<<<<<<< HEAD
   FillingMethod,
   HybridMappingObject,
   HybridMappingResult,
+=======
+>>>>>>> origin/main
   MappingContract,
   MappingError,
   MappingOutput,
   MappingResult,
 } from "@/types/mapping";
+<<<<<<< HEAD
 import { validateDataPath } from "./validator";
 
 /**
  * Builds and validates a Mapping Object and Expected Types Object given template keys, user mapping inputs, expected types inputs, root path, and API response.
  *
+=======
+import { validateDataPath } from './validator';
+
+/**
+ * Builds and validates a Mapping Object and Expected Types Object given template keys, user mapping inputs, expected types inputs, root path, and API response.
+ * 
+>>>>>>> origin/main
  * @param templateKeys Array of valid template keys from the template contract.
  * @param userInputs Record mapping template keys to user-entered data paths.
  * @param expectedTypesInputs Record mapping template keys to expected data types ('string' | 'number' | 'array' | 'null').
@@ -32,6 +43,7 @@ export function buildMapping(
   const errors: MappingError[] = [];
 
   const validKeysSet = new Set(templateKeys);
+<<<<<<< HEAD
   const validTypes: ExpectedDataType[] = ["string", "number", "array", "null"];
 
   if (!rootPath.trim()) {
@@ -45,6 +57,9 @@ export function buildMapping(
       ],
     };
   }
+=======
+  const validTypes: ExpectedDataType[] = ['string', 'number', 'array', 'null'];
+>>>>>>> origin/main
 
   for (const [key, rawPath] of Object.entries(userInputs)) {
     // Check if template key is valid
@@ -69,10 +84,17 @@ export function buildMapping(
     const expectedType = expectedTypesInputs[key];
     if (!expectedType || !validTypes.includes(expectedType)) {
       errors.push({
+<<<<<<< HEAD
         kind: "InvalidExpectedType",
         message: `Invalid or missing expected data type for template key "${key}"`,
         templateKey: key,
         path: trimmedPath,
+=======
+        kind: 'InvalidExpectedType',
+        message: `Invalid or missing expected data type for template key "${key}"`,
+        templateKey: key,
+        path: trimmedPath
+>>>>>>> origin/main
       });
       continue;
     }
@@ -97,6 +119,7 @@ export function buildMapping(
   }
 
   return { ok: true, value: { mapping, expectedTypes } };
+<<<<<<< HEAD
 }
 
 export function buildHybridMapping(
@@ -156,4 +179,6 @@ export function buildHybridMapping(
   return errors.length > 0
     ? { ok: false, errors }
     : { ok: true, value: { mapping, expectedTypes } };
+=======
+>>>>>>> origin/main
 }

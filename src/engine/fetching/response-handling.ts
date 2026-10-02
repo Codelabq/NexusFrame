@@ -9,7 +9,15 @@ function headersToRecord(
   const output: Record<string, string> = {};
 
   try {
+<<<<<<< HEAD
     if (headers instanceof Headers) {
+=======
+    if (typeof headers.entries === "function") {
+      for (const [key, value] of headers.entries()) {
+        output[key] = String(value);
+      }
+    } else if (typeof headers.forEach === "function") {
+>>>>>>> origin/main
       headers.forEach((value, key) => {
         output[key] = String(value);
       });
