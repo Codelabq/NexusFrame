@@ -2,7 +2,6 @@
 import { validateInvalidValues } from "./invalid-values";
 import { validatePathExistence } from "./path-existence";
 import { validateTypeCompatibility } from "./type-compatibility";
-<<<<<<< HEAD
 import { resolveHybridMapping, resolveMappingPaths } from "@/engine/resolve";
 import type {
   DirectValidationInput,
@@ -10,10 +9,6 @@ import type {
   ValidationInput,
   ValidationResult,
 } from "@/types/validation";
-=======
-import { resolveMappingPaths } from "@/engine/resolve";
-import type { ValidationInput, ValidationResult } from "@/types/validation";
->>>>>>> origin/main
 
 export * from "./invalid-values";
 export * from "./path-existence";
@@ -44,7 +39,6 @@ export function validate(input: ValidationInput): ValidationResult {
     valid: issues.length === 0,
     issues,
   };
-<<<<<<< HEAD
 }
 
 export function validateHybrid(input: HybridValidationInput): ValidationResult {
@@ -70,6 +64,4 @@ export function validateDirect(input: DirectValidationInput): ValidationResult {
   ];
 
   return { valid: issues.length === 0, issues };
-=======
->>>>>>> origin/main
 }
